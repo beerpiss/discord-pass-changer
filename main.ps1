@@ -34,6 +34,7 @@ function New-Password {
 
 function Get-Headers {
     param (
+        [Parameter(Mandatory=$true)]
         [string]$token
     )
     $json = @"
@@ -48,7 +49,9 @@ function Get-Headers {
 
 function Set-Password {
     param (
+        [Parameter(Mandatory=$true)]
         [string]$oldPass,
+        [Parameter(Mandatory=$true)]
         [string]$token
     )
     $userInfo = ConvertFrom-Json (Invoke-WebRequest -Uri ($DISCORD_API + 'users/@me') -Headers (ConvertFrom-Json -AsHashtable (Get-Headers -token $token))).Content
@@ -71,7 +74,9 @@ function Set-Password {
 
 function Update-Bitwarden {
     param (
+        [Parameter(Mandatory=$true)]
         [string]$id,
+        [Parameter(Mandatory=$true)]
         [string]$password
     )
     bw sync | Out-Null
@@ -81,15 +86,18 @@ function Update-Bitwarden {
 
 function Update-Changes {
     param (
+        [Parameter(Mandatory=$true)]
         [string]$oldPass,
+        [Parameter(Mandatory=$true)]
         [string]$newPass,
+        [Parameter(Mandatory=$true)]
         [string]$dabezt
     )
     Write-Output "===============================" | Tee-Object -Append -file log.txt
     Write-Output "Current date: " + (Get-Date) | Tee-Object -Append -file log.txt
     Write-Output "Old password: $oldPass" | Tee-Object -Append -file log.txt
     Write-Output "New password: $newPass" | Tee-Object -Append -file log.txt
-    Write-Output "Token: $dabezt" | Tee-Object -Append -file log.txt
+    #Write-Output "Token: $dabezt" | Tee-Object -Append -file log.txt
     Write-Output "`n"
     Write-Output "To relogin, run this in Console"
     $code = @"
